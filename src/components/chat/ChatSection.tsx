@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react';
 
-export const ChatSection = () => {
+//todo update type of setCode
+export const ChatSection = ({ setSourceCode }: any) => {
     const [value, setValue] = useState('');
     const [messages, setMessages] = useState<string[]>([]);
 
@@ -16,6 +17,8 @@ export const ChatSection = () => {
         const { prompt } = Object.fromEntries(form);
 
         console.log(prompt);
+
+        setSourceCode((prev: Object) => ({ ...prev, html: prompt.toString() }));
 
         setMessages((prev: string[]) => [...prev, prompt.toString()]);
         setValue('');
