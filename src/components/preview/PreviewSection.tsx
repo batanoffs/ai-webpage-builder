@@ -1,49 +1,57 @@
 import { useState } from 'react';
 
-export const PreviewSection = () => {
-    const [code, setCode] = useState('');
+type PreviewSectionProps = {
+    sourceCode: {
+        html: string;
+        css: string;
+        js: string;
+    };
+};
 
-    const onPreviewTab = (e) => {
-        //switch the content to iframe
+export const PreviewSection = ({ sourceCode }: PreviewSectionProps) => {
+    const [currentTab, setCurrentTab] = useState('web-preview');
+
+    const onPreviewTab = () => {
+        setCurrentTab('web-preview');
     };
 
-    const onCodeTab = (e) => {
-        //switch the content to display the code for the page
+    const onCodeTab = () => {
+        setCurrentTab('code-preview');
     };
+
+    const code = `
+    <html>
+      <head>
+        <style>${sourceCode.css}</style>
+      </head>
+      <body>
+        ${sourceCode.html}
+        <script>${sourceCode.js}</script>
+      </body>
+    </html>
+    `;
 
     return (
         <aside className="h-[100dvh] w-[50%] flex flex-col">
             <div className="flex border-b-[1px]">
-                <button onClick={() => {}} className="py-2 px-4 border">
+                <button onClick={onPreviewTab} className="py-2 px-4 border">
                     <img className="w-4 h-4 inline-block mr-2" src="./src/assets/preview.svg" alt="eye icon" />
                     Preview
                 </button>
-                <button className="py-2 px-4 border">
+                <button onClick={onCodeTab} className="py-2 px-4 border">
                     <span>{'< >'}</span> Code
                 </button>
             </div>
 
-            <iframe
-                srcDoc={`
-                    <html>
-                        <head>
-                            <style>
-                                body {
-                                    background-color: #eee;
-                                }
-                                h1 {
-                                    text-align: center;
-                                }
-                            </style>
-                        </head>
-                        <body>
-                            <h1>Example</h1>
-                            <p>This is an example of a webpage.</p>
-                        </body>
-                    </html>
-                `}
-                className="h-auto w-full"
-            />
+            {currentTab === 'web-preview' && <iframe className="h-auto w-full" id="web-preview" srcDoc={code} />}
+
+            {currentTab === 'code-preview' && (
+                <section id="code-preview">
+                    <pre>
+                        <code>{code}</code>
+                    </pre>
+                </section>
+            )}
         </aside>
     );
 };
