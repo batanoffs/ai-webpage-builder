@@ -1,4 +1,5 @@
 import { FormEvent, useState } from 'react';
+import axios from 'axios';
 
 //todo update type of setCode
 export const ChatSection = ({ setSourceCode }: any) => {
@@ -9,19 +10,45 @@ export const ChatSection = ({ setSourceCode }: any) => {
         setValue(event.target.value);
     };
 
-    const handleSubmit = (event: FormEvent) => {
+    const handleSubmit = async (event: FormEvent) => {
         event?.preventDefault();
-        // openAi api request?
-
         const form = new FormData(event.target as HTMLFormElement);
         const { prompt } = Object.fromEntries(form);
 
-        console.log(prompt);
+        const reqData = {
+            model: 'gpt-3.5-turbo',
+            messages: [
+                {
+                    role: 'system',
+                    content: [
+                        {
+                            type: 'text',
+                            text: `You are a helpful assistant`,
+                            //that writes HTML, CSS and JavaScript code for building a webpage. And returns a response which describes briefly what you have done in text and a JSON object with the code split in three sections for JS, html and css
+                        },
+                    ],
+                },
+                { role: 'user', content: `${prompt}` },
+            ],
+        };
 
-        setSourceCode((prev: Object) => ({ ...prev, html: prompt.toString() }));
+        try {
+            const response = await axios.post('https://api.openai.com/v1/chat/completions', reqData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+                },
+            });
+            const data = response.data;
+            console.log(response);
+            console.log(data);
+            // setSourceCode((prev: Object) => ({ ...prev, html: prompt.toString() }));
 
-        setMessages((prev: string[]) => [...prev, prompt.toString()]);
-        setValue('');
+            setMessages((prev: string[]) => [...prev, prompt.toString()]);
+            setValue('');
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
