@@ -1,15 +1,14 @@
 import { useState } from 'react';
-import { ChatSection } from './components/chat/ChatSection';
-import { AppLayout } from './components/layout/AppLayout';
-import { PreviewSection } from './components/preview/PreviewSection';
+import { ChatSection, AppLayout, PreviewSection } from './components/index';
 
 export const App = () => {
     const [sourceCode, setSourceCode] = useState<string>('');
+    const [currentTab, setCurrentTab] = useState('PREVIEW');
 
     return (
         <AppLayout>
-            <ChatSection setSourceCode={setSourceCode} />
-            <PreviewSection sourceCode={sourceCode} />
+            <ChatSection setSourceCode={setSourceCode} setCurrentTab={setCurrentTab} />
+            <PreviewSection sourceCode={sourceCode} currentTab={currentTab} setCurrentTab={setCurrentTab} />
         </AppLayout>
     );
 };
