@@ -1,6 +1,10 @@
 # Ai Webpage Builder
 
-This is a simple webpage builder that uses OpenAI's GPT-4 to generate HTML, CSS and JavaScript code for building a webpage.
+This is a webpage builder SPA application that uses OpenAI's GPT-4 to generate HTML, CSS and JavaScript code for building a webpage. Build with React, Typescript and Tailwind CSS.
+
+Helpers libraries:
+- axios
+- dotenv
 
 ## How it works
 
@@ -27,7 +31,10 @@ This is a simple webpage builder that uses OpenAI's GPT-4 to generate HTML, CSS 
 - **getCompletions(messages)** - Uses JSON schema set in the request. This function accepts all messages from the current conversation between the user and the AI and returns the response. This is the service which doest not stream data
 - **getSteamData(messages, setSourceCode)** - Uses fetch, instead of axios because axios does not support streams in the client side. This function accepts all messages from the current conversation and setter function to update the source code. This is the service which streams the data
 
-Note: **both services work, but the one with steam data has some issues splitting the code from the description**
+Note: 
+- **The active service for streaming data is `getSteamData()`**
+- *Please consider that the function without streaming `getCompletions()` is commented out, but working as expected*
+- *both services work, but the one with steam data has some issues splitting the code from the description*
 
 ## Hooks 
   - **useChatHandlers(setSourceCode, setCurrentTab)** - accepts two setter functions, one to update the source code and the other to update the current tab. This hook is used to handle the chat section. When the user talks with the ai. It updates the source code and the current view tab.
