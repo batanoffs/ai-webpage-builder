@@ -1,14 +1,6 @@
 import { useState } from 'react';
 
-type PreviewSectionProps = {
-    sourceCode: {
-        html: string;
-        css: string;
-        js: string;
-    };
-};
-
-export const PreviewSection = ({ sourceCode }: PreviewSectionProps) => {
+export const PreviewSection = ({ sourceCode }: { sourceCode: string }) => {
     const [currentTab, setCurrentTab] = useState('web-preview');
 
     const onPreviewTab = () => {
@@ -18,18 +10,6 @@ export const PreviewSection = ({ sourceCode }: PreviewSectionProps) => {
     const onCodeTab = () => {
         setCurrentTab('code-preview');
     };
-
-    const code = `
-    <html>
-      <head>
-        <style>${sourceCode.css}</style>
-      </head>
-      <body>
-        ${sourceCode.html}
-        <script>${sourceCode.js}</script>
-      </body>
-    </html>
-    `;
 
     return (
         <aside className="h-[100dvh] w-[50%] flex flex-col">
@@ -43,12 +23,12 @@ export const PreviewSection = ({ sourceCode }: PreviewSectionProps) => {
                 </button>
             </div>
 
-            {currentTab === 'web-preview' && <iframe className="h-auto w-full" id="web-preview" srcDoc={code} />}
+            {currentTab === 'web-preview' && <iframe className="h-full w-full" id="web-preview" srcDoc={sourceCode} />}
 
             {currentTab === 'code-preview' && (
                 <section id="code-preview">
                     <pre>
-                        <code>{code}</code>
+                        <code>{`${sourceCode}`}</code>
                     </pre>
                 </section>
             )}
