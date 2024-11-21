@@ -1,6 +1,7 @@
 # Ai Webpage Builder
 
 TODO:
+- [ ] finish chat styles and fix scrolling issues
 - [ ] push previous messages in arr and provide them to the model (expensive on tokens, there is a limit)
 - [ ] in the json shema add history tracking
 - [ ] update proms engineering for system instructions
