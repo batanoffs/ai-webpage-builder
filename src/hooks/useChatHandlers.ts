@@ -40,47 +40,52 @@ export const useChatHandlers = ({ setSourceCode, setCurrentTab }: useChatProps) 
 
             apiContext.push({ role: 'user', content: `${prompt}` });
 
-            // This is the service without streaming the data
+            // -----------------------------------------------------------
+            // The service without streaming the data
+            // -----------------------------------------------------------
 
-            const response = await aiService.getCompletions(apiContext);
-            if (response.status !== 200) throw new Error('Request failed with status ' + response.status);
-            const data = response.data;
-            if (!data) throw new Error('No data received');
-            const aiMessage = data.choices[0].message.content;
-            const parsedAiMessage = JSON.parse(aiMessage);
-            setChatMessages((prev) => [
-                ...prev,
-                {
-                    id: prev.length,
-                    role: 'bot',
-                    message: parsedAiMessage.answer,
-                },
-            ]);
-            apiContext.push({ role: 'assistant', content: `${parsedAiMessage.code}` });
-            setSourceCode(parsedAiMessage.code);
-
-            //Request data with streaming
-            // const response = await aiService.getSteamData(apiContext, setSourceCode);
-            // if (!response || response === undefined) throw new Error('Request failed');
-
-            // const { data } = response;
-
-            // if (!data) throw new Error('No description or code received');
-
-            // const destructureData = data.split('\nhtml\n');
-            // const description = destructureData[0];
-            // const code = destructureData[1];
-
+            // const response = await aiService.getCompletions(apiContext);
+            // if (response.status !== 200) throw new Error('Request failed with status ' + response.status);
+            // const data = response.data;
+            // if (!data) throw new Error('No data received');
+            // const aiMessage = data.choices[0].message.content;
+            // const parsedAiMessage = JSON.parse(aiMessage);
             // setChatMessages((prev) => [
             //     ...prev,
             //     {
             //         id: prev.length,
             //         role: 'bot',
-            //         message: description,
+            //         message: parsedAiMessage.answer,
             //     },
             // ]);
+            // apiContext.push({ role: 'assistant', content: `${parsedAiMessage.code}` });
+            // setSourceCode(parsedAiMessage.code);
 
-            // apiContext.push({ role: 'assistant', content: code });
+            // -----------------------------------------------------------
+            // The service that streams the data
+            // -----------------------------------------------------------
+
+            const response = await aiService.getSteamData(apiContext, setSourceCode);
+            if (!response || response === undefined) throw new Error('Request failed');
+
+            const { data } = response;
+
+            if (!data) throw new Error('No description or code received');
+
+            const destructureData = data.split('\nhtml\n');
+            const description = destructureData[0];
+            const code = destructureData[1];
+
+            setChatMessages((prev) => [
+                ...prev,
+                {
+                    id: prev.length,
+                    role: 'bot',
+                    message: description,
+                },
+            ]);
+
+            apiContext.push({ role: 'assistant', content: code });
 
             setCurrentTab('PREVIEW');
         } catch (error) {
