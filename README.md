@@ -1,10 +1,43 @@
 # Ai Webpage Builder
 
+This is a simple webpage builder that uses OpenAI's GPT-4 to generate HTML, CSS and JavaScript code for building a webpage.
+
+## How it works
+
+- The user enters a prompt in the text area.
+- The prompt is sent to the OpenAI API.
+- The OpenAI API generates a response.
+- The response is parsed into HTML, CSS and JavaScript code.
+- The code is injected into the webpage and displayed.
+
+## Installation
+
+- Clone the repository.
+- Install the dependencies with `npm install`.
+- Start the server with 
+  ```bash
+    npm run dev
+  ```
+
+  then navigate to `http://localhost:3000`
+
+
+
+## Services - in service folder the file `openAI.ts`, there are two functions:
+- **getCompletions(messages)** - Uses JSON schema set in the request. This function accepts all messages from the current conversation between the user and the AI and returns the response. This is the service which doest not stream data
+- **getSteamData(messages, setSourceCode)** - Uses fetch, instead of axios because axios does not support streams in the client side. This function accepts all messages from the current conversation and setter function to update the source code. This is the service which streams the data
+
+Note: **both services work, but the one with steam data has some issues splitting the code from the description**
+
+## Hooks 
+  - **useChatHandlers(setSourceCode, setCurrentTab)** - accepts two setter functions, one to update the source code and the other to update the current tab. This hook is used to handle the chat section. When the user talks with the ai. It updates the source code and the current view tab.
+
 TODO:
-- [ ] finish chat styles and fix scrolling issues
-- [ ] push previous messages in arr and provide them to the model (expensive on tokens, there is a limit)
-- [ ] in the json shema add history tracking
-- [ ] update proms engineering for system instructions
-- [ ] while generating code switch to code tab and show the code generation process when ready switch back to preview
+- [x] add steaming data
+- [x] finish chat styles and fix scrolling issues
+- [x] push previous messages in arr and provide them to the model (expensive on tokens, there is a limit)
+- [ ] in the json schema add history tracking
+- [x] update proms engineering for system instructions
+- [x] while generating code switch to code tab and show the code generation process when ready switch back to preview
 - [ ] brainstorm on history dropdown implementation
 - [ ] add history dropdown
