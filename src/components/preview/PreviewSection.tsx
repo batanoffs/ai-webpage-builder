@@ -1,37 +1,23 @@
-import { useState } from 'react';
+import { CodePreview, Navigation, WebPreview } from './assets/index';
 
-export const PreviewSection = ({ sourceCode }: { sourceCode: string }) => {
-    const [currentTab, setCurrentTab] = useState('web-preview');
+type PreviewSectionProps = {
+    sourceCode: string;
+    currentTab: string;
+    setCurrentTab: (tab: string) => void;
+};
 
-    const onPreviewTab = () => {
-        setCurrentTab('web-preview');
-    };
+const OutputViews = {
+    PREVIEW: WebPreview,
+    CODE: CodePreview,
+};
 
-    const onCodeTab = () => {
-        setCurrentTab('code-preview');
-    };
+export const PreviewSection = ({ sourceCode, currentTab, setCurrentTab }: PreviewSectionProps) => {
+    const CurrentView = OutputViews[currentTab as keyof typeof OutputViews] ?? WebPreview;
 
     return (
         <aside className="h-[100dvh] w-[50%] flex flex-col">
-            <div className="flex border-b-[1px]">
-                <button onClick={onPreviewTab} className="py-2 px-4 border">
-                    <img className="w-4 h-4 inline-block mr-2" src="./src/assets/preview.svg" alt="eye icon" />
-                    Preview
-                </button>
-                <button onClick={onCodeTab} className="py-2 px-4 border">
-                    <span>{'< >'}</span> Code
-                </button>
-            </div>
-
-            {currentTab === 'web-preview' && <iframe className="h-full w-full" id="web-preview" srcDoc={sourceCode} />}
-
-            {currentTab === 'code-preview' && (
-                <section id="code-preview">
-                    <pre>
-                        <code>{`${sourceCode}`}</code>
-                    </pre>
-                </section>
-            )}
+            <Navigation currentTab={currentTab} setCurrentTab={setCurrentTab} />
+            <CurrentView sourceCode={sourceCode} />
         </aside>
     );
 };
