@@ -1,17 +1,27 @@
 import { useChatHandlers } from '../../hooks/useChatHandlers';
 
-export const ChatSection = ({ setSourceCode }: any) => { //todo update any not good practice
-    const { messages, value, changeHandler, handleSubmit } = useChatHandlers(setSourceCode);
+type ChatSectionProps = {
+    setSourceCode: (sourceCode: string) => void;
+    setCurrentTab: (tab: string) => void;
+};
+
+export const ChatSection = ({ setSourceCode, setCurrentTab }: ChatSectionProps) => {
+    const { chatMessages, value, changeHandler, handleSubmit } = useChatHandlers({ setSourceCode, setCurrentTab });
     return (
         <section className="flex sticky flex-col h-[100dvh] w-[50%] border-r-[1px]">
-            <div className="h-[5dvh] border-b-[1px] pl-4">
+            <div className="h-[5dvh] border-b-[1px] pl-4 flex items-center">
                 <h1 className="font-bold">AI Webpage Builder</h1>
             </div>
-            <div id="chat" className="flex flex-col gap-4 p-4 h-[90dvh] border-b-[1px] bg-gray-50">
-                <p>Hello, how can I help you today?</p>
-                <p>Hi</p>
-                {messages.map((message, index) => (
-                    <p key={index}>{message}</p>
+            <div className="flex flex-col gap-2 p-4 h-[90dvh] border-b-[1px] bg-gray-50 overflow-y-scroll no-scrollbar">
+                {chatMessages.map((entry, index) => (
+                    <p
+                        key={entry.id}
+                        className={`p-2 rounded-md w-fit min-w-fit ${
+                            index % 2 !== 0 ? 'bg-blue-500 text-white' : 'border border-slate-200 bg-white'
+                        }`}
+                    >
+                        {entry.message}
+                    </p>
                 ))}
             </div>
 
