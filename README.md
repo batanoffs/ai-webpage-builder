@@ -2,7 +2,7 @@
 
 This is a webpage builder SPA application that uses OpenAI's GPT-4 to generate HTML, CSS and JavaScript code for building a webpage. Build with React, Typescript and Tailwind CSS.
 
-Helpers libraries:
+Helper libraries:
 - axios
 - dotenv
 
