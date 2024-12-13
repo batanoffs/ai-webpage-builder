@@ -21,7 +21,9 @@ Helper libraries:
 
 - Clone the repository.
 - Install the dependencies with `npm install`.
-- Create your env variable from openAi API and add it as VITE_OPENAI_API_KEY="your api key"
+- Create your env variable from openAi API and add it as `VITE_OPENAI_API_KEY="your api key"`
+
+  *Please consider changing the ai model according to your plan. If needed you can find the the settings in* `src/constraints/instructions.ts`
 - Start the server with 
   ```bash
     npm run dev
