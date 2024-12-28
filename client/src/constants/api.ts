@@ -1,3 +1,3 @@
-export const API = 'https://api.openai.com/v1/chat/completions';
+export const API = 'https://localhost:5001/api/completions';
 
 export const endpoints = {};
