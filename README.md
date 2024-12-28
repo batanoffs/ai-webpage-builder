@@ -2,7 +2,10 @@
 
 This is a webpage builder SPA application that uses OpenAI's GPT-4 to generate HTML, CSS and JavaScript code for building a webpage. Build with React, Typescript and Tailwind CSS.
 
-Helpers libraries:
+
+https://github.com/user-attachments/assets/39f5e75c-cdb0-47eb-8e98-1da768a64e3b
+
+Helper libraries:
 - axios
 - dotenv
 
@@ -18,6 +21,9 @@ Helpers libraries:
 
 - Clone the repository.
 - Install the dependencies with `npm install`.
+- Create your env variable from openAi API and add it as `VITE_OPENAI_API_KEY="your api key"`
+
+  *Please consider changing the ai model according to your plan. If needed you can find the the settings in* `src/constraints/instructions.ts`
 - Start the server with 
   ```bash
     npm run dev
