@@ -15,7 +15,7 @@ export const Navigation = ({ currentTab, setCurrentTab }: NavigationProps) => {
             >
                 <img
                     className={`w-4 h-4 inline-block mr-2 `}
-                    src="./src/assets/preview.svg"
+                    src="./preview.svg"
                     alt="eye icon"
                     style={{ fill: 'blue' }} // change the fill color to blue
                 />
