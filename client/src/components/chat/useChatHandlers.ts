@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { aiService } from '../services/openAI';
-import { AiMessages, ChatMessages } from '../interfaces/message.interface';
-import { AI } from '../constants/instructions';
+import { aiService } from '../../services/openAI';
+import { AiMessages, ChatMessages } from '../../interfaces/message.interface';
+import { AI } from '../../constants/instructions';
 
 type useChatProps = {
     setSourceCode: (sourceCode: string) => void;
