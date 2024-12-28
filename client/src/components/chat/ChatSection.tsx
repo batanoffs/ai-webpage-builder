@@ -1,4 +1,4 @@
-import { useChatHandlers } from '../../hooks/useChatHandlers';
+import { useChatHandlers } from './useChatHandlers';
 
 type ChatSectionProps = {
     setSourceCode: (sourceCode: string) => void;
