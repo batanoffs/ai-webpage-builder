@@ -1,20 +1,23 @@
 {
   "name": "server",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "0.0.1",
+  "main": "index.ts",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npx tsx --env-file=.env --watch  src/index.ts",
+    "build": "tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": "batanoffs",
   "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "express": "^4.21.2"
-  },
+  "description": "API server for the ai-builder app",
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "@types/node": "^22.10.2",
     "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "openai": "^4.77.0"
   }
 }
