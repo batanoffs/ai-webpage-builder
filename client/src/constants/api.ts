@@ -1,3 +1,7 @@
-export const API = 'https://localhost:5001/api/completions';
+// TODO fix env for client
 
-export const endpoints = {};
+export const baseURL = process.env.serverURL || 'http://localhost:3000/api/';
+
+export const API = {
+    chat: baseURL + 'completions',
+};
