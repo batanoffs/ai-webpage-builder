@@ -15,12 +15,12 @@ export const ChatSection = ({ setSourceCode, setCurrentTab }: ChatSectionProps) 
             <div className="flex flex-col gap-2 p-4 h-[90dvh] border-b-[1px] bg-gray-50 overflow-y-scroll no-scrollbar">
                 {chatMessages.map((entry, index) => (
                     <p
-                        key={entry.id}
+                        key={entry.content}
                         className={`p-2 rounded-md w-fit min-w-fit ${
                             index % 2 !== 0 ? 'bg-blue-500 text-white' : 'border border-slate-200 bg-white'
                         }`}
                     >
-                        {entry.message}
+                        {entry.content}
                     </p>
                 ))}
             </div>
