@@ -5,10 +5,8 @@ import { initialChatMessage } from '../../utils/chat';
 
 type useChatProps = {
     setSourceCode: (sourceCode: string) => void;
-    setCurrentTab: (tab: string) => void;
+    setCurrentTab: (tab: 'PREVIEW' | 'CODE') => void;
 };
-
-//TODO update types 
 
 export const useChatHandlers = ({ setSourceCode, setCurrentTab }: useChatProps) => {
     const [chatMessages, setChatMessages] = useState<ChatMessages>([initialChatMessage]);
@@ -24,22 +22,35 @@ export const useChatHandlers = ({ setSourceCode, setCurrentTab }: useChatProps) 
         setCurrentTab('CODE');
 
         try {
+            // Create new FormData object from the form
             const form = new FormData(event.target as HTMLFormElement);
+
+            // Get the prompt value from the form
             const { prompt } = Object.fromEntries(form);
 
+            // Check if the prompt is valid string
             if (!prompt || typeof prompt !== 'string') throw new Error('Invalid prompt');
 
+            // Call the AI service to get the response from open ai
             const response = await aiService.getSteamData(prompt);
 
+            // Check if the response is valid
             if (!response || response === undefined) throw new Error('Request failed');
 
-            const { data } = response;
+            // Add the prompt to the chat messages list
+            setChatMessages((prev) => [...prev, prompt]);
 
-            if (!data) throw new Error('No description or code received');
+            console.log(response);
+            
+            // const { data } = response;
 
-            setCurrentTab('PREVIEW');
+            // if (!data) throw new Error('No description or code received');
 
-            return { data };
+
+            //TODO decide how to save or validate this data
+            // setSourceCode(data);
+            
+            // setCurrentTab('PREVIEW');
         } catch (error) {
             if (error instanceof Error) {
                 console.log(error.message);
