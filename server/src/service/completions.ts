@@ -12,7 +12,7 @@
 
 import OpenAI from 'openai';
 import { ChatCompletionMessage } from 'openai/resources';
-import { chatMessages, GPT_MODEL } from '../utils/instructions';
+import { chatMessages } from '../utils/instructions';
 
 export const generateWebsite = async (userMessage: string) => {
 	try {
@@ -33,7 +33,7 @@ export const generateWebsite = async (userMessage: string) => {
 
 		// Get steam completions from OpenAI
 		const stream = await openai.beta.chat.completions.stream({
-			model: GPT_MODEL,
+			model: process.env.GPT_MODEL || 'gpt-4o-mini',
 			stream: true,
 			messages: chatMessages as ChatCompletionMessage[],
 			// store: true, // TODO: Do I need to store?
@@ -42,7 +42,7 @@ export const generateWebsite = async (userMessage: string) => {
 		// Listen for content events
 		stream.on('content', (delta, snapshot) => {
 			process.stdout.write(delta);
-			
+
 			//TODO check if delta is a string or object
 			console.log('delta steams:', delta);
 		});
