@@ -1,4 +1,4 @@
-const SYSTEM_INSTRUCTIONS = `
+export const SYSTEM_INSTRUCTIONS = `
 You are a helpful assistant that writes HTML, CSS and JavaScript code for building a webpage. 
 You will be given a prompt by the user, then you return a response which describes very shortly what you have done. 
 After that wrap your new code in a code block combined with the existing code in previous responses if any.
@@ -10,19 +10,16 @@ When generating code, use the entire conversation history to guide your response
 Use the context and requirements provided in the initial prompt and subsequent updates to generate code that meets the user's needs.
 Use a consistent coding style and formatting throughout the generated code. Add comments for each main section`;
 
-const model = 'gpt-4o';
-
-const system = {
+const systemInstructions = {
 	role: 'system',
 	content: SYSTEM_INSTRUCTIONS,
 };
-const assistant = {
+
+const assistantInitialResponse = {
 	role: 'assistant',
 	content: 'Hello! I can help you build your webpage. What would you like to create?',
 };
 
-export const aiConfig = {
-	model,
-	system,
-	assistant,
-};
+export const GPT_MODEL = 'gpt-4o-mini';
+
+export const chatMessages = [systemInstructions, assistantInitialResponse];
