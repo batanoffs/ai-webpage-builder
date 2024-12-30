@@ -1,6 +1,7 @@
-interface ChatMessage {
-    role: 'user' | 'assistant' | 'system';
-    content: string;
-}
+// interface ChatMessage {
+//     role: 'user' | 'assistant' | 'system';
+//     content: string;
+// }
 
-export type ChatMessages = Array<ChatMessage>;
+export type ChatMessages = Array<string>;
+
