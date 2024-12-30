@@ -3,7 +3,7 @@ import { ChatSection, AppLayout, PreviewSection } from './components/index';
 
 export const App = () => {
     const [sourceCode, setSourceCode] = useState<string>('');
-    const [currentTab, setCurrentTab] = useState('PREVIEW');
+    const [currentTab, setCurrentTab] = useState<'PREVIEW' | 'CODE'>('PREVIEW');
 
     return (
         <AppLayout>

@@ -3,7 +3,7 @@ import { CodePreview, Navigation, WebPreview } from './assets/index';
 type PreviewSectionProps = {
     sourceCode: string;
     currentTab: keyof typeof OutputViews;
-    setCurrentTab: (tab: string) => void;
+    setCurrentTab: (tab: 'PREVIEW' | 'CODE') => void;
 };
 
 const OutputViews = {

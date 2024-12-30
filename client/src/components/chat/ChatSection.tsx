@@ -2,7 +2,7 @@ import { useChatHandlers } from './useChatHandlers';
 
 type ChatSectionProps = {
     setSourceCode: (sourceCode: string) => void;
-    setCurrentTab: (tab: string) => void;
+    setCurrentTab: (tab: 'PREVIEW' | 'CODE') => void;
 };
 
 export const ChatSection = ({ setSourceCode, setCurrentTab }: ChatSectionProps) => {
