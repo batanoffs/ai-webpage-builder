@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import completions from './completions';
+import completionsRoutes from './completions';
 
 const router = Router();
 
-router.use('/completions', completions);
+router.use('/completions', completionsRoutes);
 
 export default router;

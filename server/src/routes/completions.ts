@@ -4,6 +4,6 @@ import { getCompletions } from '../controllers/completions';
 
 const router = Router();
 
-router.get('/completions', getCompletions);
+router.post('/', getCompletions);
 
 export default router;
