@@ -1,4 +1,4 @@
-export const SYSTEM_INSTRUCTIONS = `
+const SYSTEM_INSTRUCTIONS = `
 You are a helpful assistant that writes HTML, CSS and JavaScript code for building a webpage. 
 You will be given a prompt by the user, then you return a response which describes very shortly what you have done. 
 After that wrap your new code in a code block combined with the existing code in previous responses if any.
@@ -19,7 +19,5 @@ const assistantInitialResponse = {
 	role: 'assistant',
 	content: 'Hello! I can help you build your webpage. What would you like to create?',
 };
-
-export const GPT_MODEL = 'gpt-4o-mini';
 
 export const chatMessages = [systemInstructions, assistantInitialResponse];
