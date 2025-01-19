@@ -3,12 +3,12 @@
 [![styled with: Prettier](https://img.shields.io/badge/styled_with-prettier-purple)](https://github.com/prettier/prettier)
 [![License: MIT](https://img.shields.io/badge/Licence-MIT-teal)](https://opensource.org/licenses/MIT)
 
-This is a webpage builder SPA application that uses OpenAI API to generate HTML, CSS and JavaScript code and combine it into a working web page.
+#### This is a webpage builder SPA application that uses OpenAI API to generate HTML, CSS and JavaScript code and combine it into a working web page.
 
-### **Warning**: 
+### Important notes 
 - Still in development. This new version aims to add server side in order to protect the API from the client and store chat history.
-- Current demo shows the project previous stage. (only client side)
 
+### Project Demo previous stage (Updated version coming soon)
 https://github.com/user-attachments/assets/39f5e75c-cdb0-47eb-8e98-1da768a64e3b
 
 ## Table of Content
