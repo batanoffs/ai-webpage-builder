@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { openAiService } from '../service/completions';
 
 const getCompletions = async (req: Request, res: Response): Promise<void> => {
@@ -18,12 +18,10 @@ const getCompletions = async (req: Request, res: Response): Promise<void> => {
 
 		// Send the completion back to the client
 		res.status(200).json({ completions });
-	} catch (error) {
-		if (error instanceof Error) {
-			res.status(500).json({ message: error.message });
-		}
+	} catch (error: unknown) {
 		console.error(error);
-		res.status(500).json({ message: 'Internal server error' });
+		if (error instanceof Error) res.status(500).json({ message: error.message });
+		if (!(error instanceof Error)) res.status(500).json({ message: 'Internal server error' });
 	}
 };
 

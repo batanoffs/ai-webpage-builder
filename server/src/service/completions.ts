@@ -19,7 +19,7 @@ export const generateWebsite = async (userMessage: string) => {
 		// Check if the user message is valid string or not
 		if (!userMessage || typeof userMessage !== 'string')
 			throw new Error(
-				`Invalid user message prompt. The type of the variable is ${typeof userMessage}`
+				`Invalid user message prompt. Variable type is ${typeof userMessage}`
 			);
 
 		// Push user message to messages array
@@ -32,7 +32,7 @@ export const generateWebsite = async (userMessage: string) => {
 		const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 		// Get steam completions from OpenAI
-		const stream = await openai.beta.chat.completions.stream({
+		const stream = openai.beta.chat.completions.stream({
 			model: process.env.GPT_MODEL || 'gpt-4o-mini',
 			stream: true,
 			messages: chatMessages as ChatCompletionMessage[],
