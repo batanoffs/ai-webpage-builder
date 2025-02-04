@@ -1,2 +1,2 @@
 export * from './message.interface';
-export * from './navigation.interface';
+export * from './preview.type';

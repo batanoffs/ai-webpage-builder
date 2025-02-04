@@ -1,5 +1,5 @@
 import { CodePreview, WebPreview } from './components';
-import { OutputViewsType, PreviewSectionProps } from './interfaces/preview.type';
+import { OutputViewsType, PreviewSectionProps } from './interfaces';
 
 const OutputViews: OutputViewsType = {
     PREVIEW: WebPreview,
