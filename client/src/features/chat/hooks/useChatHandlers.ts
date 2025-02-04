@@ -13,7 +13,7 @@ export const useChatHandlers = ({ setSourceCode, setCurrentTab }: useChatProps) 
     const [chatMessages, setChatMessages] = useState<ChatMessages>([initialChatMessage]);
     const [value, setValue] = useState<string>('');
 
-    const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const changeHandler = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setValue(event.target.value);
     };
 
