@@ -13,56 +13,68 @@
 import OpenAI from 'openai';
 import { ChatCompletionMessage } from 'openai/resources';
 import { chatMessages } from '../utils/instructions';
+import EventEmitter from 'events';
 
-export const generateWebsite = async (userMessage: string) => {
+export const generateWebsite = async (prompt: string) => {
 	try {
-		// Check if the user message is valid string or not
-		if (!userMessage || typeof userMessage !== 'string')
-			throw new Error(
-				`Invalid user message prompt. Variable type is ${typeof userMessage}`
-			);
-
-		// Push user message to messages array
-		chatMessages.push({
-			role: 'user',
-			content: userMessage,
-		});
-
 		// Create OpenAI instance with API key
 		const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+		// Push user message to messages array
+		const messages = [...chatMessages];
+		messages.push({ role: 'user', content: prompt });
+
 		// Get steam completions from OpenAI
-		const stream = openai.beta.chat.completions.stream({
+		const stream = await openai.beta.chat.completions.stream({
 			model: process.env.GPT_MODEL || 'gpt-4o-mini',
 			stream: true,
 			messages: chatMessages as ChatCompletionMessage[],
 			// store: true, // TODO: Do I need to store?
 		});
 
-		// Listen for content events
-		stream.on('content', (delta, snapshot) => {
-			process.stdout.write(delta);
+		const emitter = new EventEmitter();
 
-			//TODO check if delta is a string or object
-			console.log('delta steams:', delta);
-		});
+		// Process the stream
+		(async () => {
+			try {
+				for await (const chunk of stream) {
+					const content = chunk.choices[0]?.delta?.content || '';
+					if (content) {
+						emitter.emit('content', content);
+					}
+				}
+				emitter.emit('end');
+			} catch (error) {
+				emitter.emit('error', error);
+			}
+		})();
 
-		// Or loop through the stream like this:
-		// for await (const chunk of stream) {
-		// 		process.stdout.write(chunk.choices[0]?.delta?.content || '');
-		// }
+		return emitter;
 
-		// If want to cancel the stream use abort method:
-		// stream.controller.abort().then(() => console.log('Stream cancelled'));
+		// // Listen for content events
+		// stream.on('content', (delta, snapshot) => {
+		// 	process.stdout.write(delta);
 
-		// Get final chat completion
-		const chatCompletion = await stream.finalChatCompletion();
+		// 	//TODO check if delta is a string or object
+		// 	console.log('delta steams:', delta);
+		// });
 
-		console.log(chatCompletion); // {id: "…", choices: […], …}
+		// // Or loop through the stream like this:
+		// // for await (const chunk of stream) {
+		// // 		process.stdout.write(chunk.choices[0]?.delta?.content || '');
+		// // }
 
-		return chatCompletion;
+		// // If want to cancel the stream use abort method:
+		// // stream.controller.abort().then(() => console.log('Stream cancelled'));
+
+		// // Get final chat completion
+		// const chatCompletion = await stream.finalChatCompletion();
+
+		// console.log(chatCompletion); // {id: "…", choices: […], …}
+
+		// return chatCompletion;
 	} catch (error) {
-		return error;
+		throw error;
 	}
 };
 
