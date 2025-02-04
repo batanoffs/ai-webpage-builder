@@ -3,16 +3,14 @@ export default {
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
     theme: {
         extend: {
-            backgroundSize: {
-                'button-icon': '20px 20px',
-            },
-            backgroundPosition: {
-                'button-icon': 'center',
+            keyframes: {
+                slideIn: {
+                    '0%': { transform: 'scaleX(0)' },
+                    '100%': { transform: 'scaleX(1)' },
+                },
             },
             backgroundImage: {
                 'button-icon': "url('./src/features/chat/assets/send.svg')",
-                'tab-preview': "url('/img/footer-texture.png')",
-                'tab-code': "url('/img/footer-texture.png')",
             },
         },
     },
