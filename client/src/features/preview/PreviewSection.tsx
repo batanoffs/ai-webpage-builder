@@ -1,12 +1,7 @@
-import { CodePreview, Navigation, WebPreview } from './assets/index';
+import { CodePreview, Navigation, WebPreview } from './components';
+import { OutputViewsType, PreviewSectionProps } from './interfaces/preview.type';
 
-type PreviewSectionProps = {
-    sourceCode: string;
-    currentTab: keyof typeof OutputViews;
-    setCurrentTab: (tab: 'PREVIEW' | 'CODE') => void;
-};
-
-const OutputViews = {
+const OutputViews: OutputViewsType = {
     PREVIEW: WebPreview,
     CODE: CodePreview,
 };

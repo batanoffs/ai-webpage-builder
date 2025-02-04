@@ -10,7 +10,7 @@ export default {
                 'button-icon': 'center',
             },
             backgroundImage: {
-                'button-icon': "url('./src/assets/send.svg')",
+                'button-icon': "url('./src/features/chat/assets/send.svg')",
                 'tab-preview': "url('/img/footer-texture.png')",
                 'tab-code': "url('/img/footer-texture.png')",
             },

@@ -1,4 +1,5 @@
-import { useChatHandlers } from './useChatHandlers';
+import { useChatHandlers } from './hooks/useChatHandlers';
+import { ChatMessage } from './interfaces/message.interface';
 
 type ChatSectionProps = {
     setSourceCode: (sourceCode: string) => void;
@@ -13,12 +14,12 @@ export const ChatSection = ({ setSourceCode, setCurrentTab }: ChatSectionProps) 
                 <h1 className="font-bold">AI Webpage Builder</h1>
             </div>
             <div className="flex flex-col gap-2 p-4 h-[90dvh] border-b-[1px] bg-gray-50 overflow-y-scroll no-scrollbar">
-                {chatMessages.map((entry, index) => (
+                {chatMessages.map((entry: ChatMessage, index: number) => (
                     <p
                         key={entry.content}
-                        className={`p-2 rounded-md w-fit min-w-fit ${
-                            index % 2 !== 0 ? 'bg-blue-500 text-white' : 'border border-slate-200 bg-white'
-                        }`}
+                        className={`p-2 rounded-md w-fit min-w-fit 
+                            ${index % 2 !== 0 ? 'bg-blue-500 text-white' : 'border border-slate-200 bg-white'}
+                            `}
                     >
                         {entry.content}
                     </p>

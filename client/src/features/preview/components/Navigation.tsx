@@ -1,4 +1,4 @@
-import { NavigationProps } from '../../../interfaces/index';
+import { NavigationProps } from '../interfaces';
 
 export const Navigation = ({ currentTab, setCurrentTab }: NavigationProps) => {
     const toggleTabHandler = () => {

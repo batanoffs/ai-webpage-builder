@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChatSection, AppLayout, PreviewSection } from './components/index';
+import { ChatSection, AppLayout, PreviewSection } from './features';
 
 export const App = () => {
     const [sourceCode, setSourceCode] = useState<string>('');

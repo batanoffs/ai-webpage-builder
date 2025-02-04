@@ -1,5 +1,6 @@
-import { API } from '../constants/api';
 import axios from 'axios';
+
+import { API } from '../constants/api';
 
 const getSteamData = async (message: string) => {
     try {

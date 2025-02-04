@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { aiService } from '../../services/openAI';
-import { ChatMessages } from '../../interfaces/message.interface';
-import { initialChatMessage } from '../../constants/chat';
+
+import { aiService } from '../services/openAI';
+import { ChatMessages } from '../interfaces/message.interface';
+import { initialChatMessage } from '../constants/chat';
 
 type useChatProps = {
     setSourceCode: (sourceCode: string) => void;
@@ -41,15 +42,14 @@ export const useChatHandlers = ({ setSourceCode, setCurrentTab }: useChatProps) 
             setChatMessages((prev) => [...prev, prompt]);
 
             console.log(response);
-            
+
             // const { data } = response;
 
             // if (!data) throw new Error('No description or code received');
 
-
             //TODO decide how to save or validate this data
             // setSourceCode(data);
-            
+
             // setCurrentTab('PREVIEW');
         } catch (error) {
             if (error instanceof Error) {
