@@ -4,6 +4,6 @@ export type OutputViewsType = {
 
 export type PreviewSectionProps = {
     sourceCode: string;
-    currentTab: string;
-    setCurrentTab: (tab: 'PREVIEW' | 'CODE') => void;
+    currentTab: 'PREVIEW' | 'CODE';
+    setCurrentTab?: (tab: 'PREVIEW' | 'CODE') => void;
 };
