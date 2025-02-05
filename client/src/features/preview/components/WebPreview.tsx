@@ -8,7 +8,7 @@ export const WebPreview = ({ sourceCode }: { sourceCode: string }): ReactNode =>
                 id="web-preview" 
                 srcDoc={sourceCode}
                 title="Web Preview"
-                sandbox="allow-same-origin allow-scripts"
+                sandbox="allow-scripts"
                 loading="lazy"
             />
         </div>

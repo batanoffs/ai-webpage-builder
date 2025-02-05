@@ -1,6 +1,7 @@
 import { NavigationProps } from '../types/navigation.interface';
 
 export const Navigation = ({ currentTab, setCurrentTab }: NavigationProps) => {
+    
     const toggleTabHandler = () => {
         setCurrentTab(currentTab === 'PREVIEW' ? 'CODE' : 'PREVIEW');
     };
