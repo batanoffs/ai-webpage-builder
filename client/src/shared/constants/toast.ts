@@ -6,7 +6,8 @@ interface CustomToastOptions extends ToastOptions {
 
 export const toastOptions: { error: CustomToastOptions } = {
     error: {
-        duration: Infinity, // Make toast persistent
+        duration: 8000, // Make toast persistent
+
         style: {
             background: '#FEE2E2',
             color: '#991B1B',
