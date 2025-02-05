@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import toast, { Toast, ToastOptions } from 'react-hot-toast';
+import toast, { ToastOptions } from 'react-hot-toast';
 import DOMPurify from 'dompurify';
 
 import { llmService } from '../services/steamService';
@@ -7,11 +7,6 @@ import { toastOptions } from '../../../shared';
 import { ChatMessages } from '../interfaces/message.interface';
 import { initialChatMessage } from '../constants/chat';
 import { OpenAIConfig } from '../../../shared/types/aiSettings.type';
-
-interface CustomToastOptions extends Partial<ToastOptions> {
-    duration?: number;
-    style?: React.CSSProperties;
-}
 
 type useChatProps = {
     setSourceCode: (sourceCode: string) => void;
@@ -48,21 +43,14 @@ export const useChatHandlers = ({ setSourceCode, setCurrentTab, aiSettings }: us
             toast.dismiss(toastId.current);
         }
 
-        const renderToast = (t: Toast) => {
+        const renderToast = () => {
             return React.createElement('div', {
-                onClick: () => toast.dismiss(t.id),
-                style: { cursor: 'pointer' },
-                dangerouslySetInnerHTML: { __html: DOMPurify.sanitize(errorMessage) }
+                dangerouslySetInnerHTML: { __html: DOMPurify.sanitize(errorMessage) },
             });
         };
 
-        const options: CustomToastOptions = {
+        const options: ToastOptions = {
             ...toastOptions.error,
-            duration: Infinity,
-            style: {
-                ...toastOptions.error.style,
-                cursor: 'pointer'
-            }
         };
 
         toastId.current = toast.error(renderToast, options);
@@ -87,10 +75,10 @@ export const useChatHandlers = ({ setSourceCode, setCurrentTab, aiSettings }: us
             }
 
             // Add user message
-            setChatMessages(prev => [...prev, { role: 'user', content: prompt }]);
+            setChatMessages((prev) => [...prev, { role: 'user', content: prompt }]);
 
             // Initialize assistant message
-            setChatMessages(prev => [...prev, { role: 'assistant', content: '' }]);
+            setChatMessages((prev) => [...prev, { role: 'assistant', content: '' }]);
 
             // Track current response
             let currentExplanation = '';
@@ -103,7 +91,7 @@ export const useChatHandlers = ({ setSourceCode, setCurrentTab, aiSettings }: us
                 (data) => {
                     if (data.explanation) {
                         currentExplanation += data.explanation;
-                        setChatMessages(prev => {
+                        setChatMessages((prev) => {
                             const newMessages = [...prev];
                             newMessages[newMessages.length - 1].content = currentExplanation;
                             return newMessages;
@@ -121,8 +109,8 @@ export const useChatHandlers = ({ setSourceCode, setCurrentTab, aiSettings }: us
                 }
             );
         } catch (error) {
-            let errorMessage = "An unexpected error occurred";
-            
+            let errorMessage = 'An unexpected error occurred';
+
             if (error instanceof Error) {
                 try {
                     // Check if the error message is JSON (for backward compatibility)
@@ -137,7 +125,7 @@ export const useChatHandlers = ({ setSourceCode, setCurrentTab, aiSettings }: us
             showErrorToast(errorMessage);
 
             // Add error message to chat with error styling
-            setChatMessages(prev => {
+            setChatMessages((prev) => {
                 const newMessages = [...prev];
                 newMessages[newMessages.length - 1] = {
                     role: 'assistant',
