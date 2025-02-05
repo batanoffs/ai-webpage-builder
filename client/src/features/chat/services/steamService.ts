@@ -27,7 +27,7 @@ const getStreamData = (
     source.onmessage = (event) => {
         try {
             const data = JSON.parse(event.data);
-            
+
             if (data.error) {
                 throw new Error(data.error);
             }
@@ -38,13 +38,13 @@ const getStreamData = (
                 retryCount = 0;
             }
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : "Failed to process server response";
+            const errorMessage = error instanceof Error ? error.message : 'Failed to process server response';
             onError(new Error(errorMessage));
             source.close();
         }
     };
 
-    source.onerror = (event) => {
+    source.onerror = () => {
         // Handle reconnection attempts
         if (retryCount < maxRetries) {
             retryCount++;
@@ -53,7 +53,7 @@ const getStreamData = (
         }
 
         source.close();
-        onError(new Error("Lost connection to server. Please try again."));
+        onError(new Error('Lost connection to server. Please try again.'));
     };
 
     source.addEventListener('complete', () => {
@@ -64,7 +64,7 @@ const getStreamData = (
     const connectionTimeout = setTimeout(() => {
         if (source.readyState !== source.CLOSED) {
             source.close();
-            onError(new Error("Request timed out. Please check your internet connection and try again."));
+            onError(new Error('Request timed out. Please check your internet connection and try again.'));
         }
     }, 30000); // 30 second timeout
 
