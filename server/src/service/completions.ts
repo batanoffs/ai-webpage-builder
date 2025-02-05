@@ -1,83 +1,129 @@
 /**
- * Generates text based on the user's message using OpenAI's API.
+ * Generates website code based on the user's message using OpenAI's API.
  *
- * @param {string} userMessage - The message from the user to generate a response for.
- * @returns {Promise<any>} The chat completion response from OpenAI or an error if the operation fails.
- * @throws {Error} If the user message is invalid.
- *
- * @example
- * const response = await generateText("Hello, how are you?");
- * console.log(response);
+ * @param {string} prompt - The message from the user to generate a response for.
+ * @returns {Promise<GenerationResponse>} Object containing explanation and code.
+ * @throws {Error} If the API request fails or response is invalid.
  */
 
 import OpenAI from 'openai';
+
 import { ChatCompletionMessage } from 'openai/resources';
-import { chatMessages } from '../utils/instructions';
-import EventEmitter from 'events';
+import { chatMessages } from '../constants/instructions';
 
-export const generateWebsite = async (prompt: string) => {
-	try {
-		// Create OpenAI instance with API key
-		const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+interface GenerationResponse {
+    explanation: string;
+    code: string;
+    error?: string;
+}
 
-		// Push user message to messages array
-		const messages = [...chatMessages];
-		messages.push({ role: 'user', content: prompt });
+interface aiSettings {
+    apiKey: string;
+    model: string;
+    temperature: number;
+    maxTokens?: number;
+}
 
-		// Get steam completions from OpenAI
-		const stream = await openai.beta.chat.completions.stream({
-			model: process.env.GPT_MODEL || 'gpt-4o-mini',
-			stream: true,
-			messages: chatMessages as ChatCompletionMessage[],
-			// store: true, // TODO: Do I need to store?
-		});
+export const generateWebsite = async (
+    prompt: string,
+    aiSettings: aiSettings,
+    onProgress: (data: Partial<GenerationResponse>) => void
+): Promise<void> => {
+    try {
+        const { apiKey, model, temperature, maxTokens } = aiSettings;
 
-		const emitter = new EventEmitter();
+        // Validate configuration
+        if (!apiKey || !model || !temperature) {
+            throw new Error('Unable to config the AI service.');
+        }
 
-		// Process the stream
-		(async () => {
-			try {
-				for await (const chunk of stream) {
-					const content = chunk.choices[0]?.delta?.content || '';
-					if (content) {
-						emitter.emit('content', content);
-					}
-				}
-				emitter.emit('end');
-			} catch (error) {
-				emitter.emit('error', error);
-			}
-		})();
+        // Create OpenAI instance with error handling
+        let openai: OpenAI;
+        try {
+            openai = new OpenAI({ apiKey: apiKey });
+        } catch (err) {
+            throw new Error(
+                'There was an issue connecting to the AI service. Please try again later.'
+            );
+        }
 
-		return emitter;
+        // Prepare messages array with user prompt
+        const messages = [...chatMessages, { role: 'user', content: prompt }];
 
-		// // Listen for content events
-		// stream.on('content', (delta, snapshot) => {
-		// 	process.stdout.write(delta);
+        // Get stream completions from OpenAI
+        const stream = await openai.chat.completions.create({
+            model: model,
+            messages: messages as ChatCompletionMessage[],
+            stream: true,
+            temperature: temperature,
+            max_tokens: maxTokens || 150,
+        });
 
-		// 	//TODO check if delta is a string or object
-		// 	console.log('delta steams:', delta);
-		// });
+        let currentContent = {
+            explanation: '',
+            code: '',
+            isCollectingCode: false,
+        };
 
-		// // Or loop through the stream like this:
-		// // for await (const chunk of stream) {
-		// // 		process.stdout.write(chunk.choices[0]?.delta?.content || '');
-		// // }
+        // Process each chunk from the stream
+        for await (const chunk of stream) {
+            const content = chunk.choices[0]?.delta?.content || '';
+            
+            if (!content) continue;
 
-		// // If want to cancel the stream use abort method:
-		// // stream.controller.abort().then(() => console.log('Stream cancelled'));
+            // Check for code block markers
+            if (content.includes('```html')) {
+                currentContent.isCollectingCode = true;
+                continue;
+            }
+            
+            if (content.includes('```') && currentContent.isCollectingCode) {
+                currentContent.isCollectingCode = false;
+                continue;
+            }
 
-		// // Get final chat completion
-		// const chatCompletion = await stream.finalChatCompletion();
+            // Update appropriate content type and send progress
+            if (currentContent.isCollectingCode) {
+                currentContent.code += content;
+                onProgress({ code: currentContent.code });
+            } else {
+                currentContent.explanation += content;
+                onProgress({ explanation: currentContent.explanation });
+            }
+        }
 
-		// console.log(chatCompletion); // {id: "…", choices: […], …}
+        // Final update with complete content
+        onProgress({
+            explanation: currentContent.explanation,
+            code: currentContent.code
+        });
+    } catch (error) {
+        // Pass through OpenAI API errors with full details
+        if (error instanceof OpenAI.APIError) {
+            // Format error message with URL as clickable link
+            let errorMessage = error.message;
+            if (error.status === 401 && error.message.includes('https://platform.openai.com/account/api-keys')) {
+                errorMessage = error.message.replace(
+                    'https://platform.openai.com/account/api-keys',
+                    '<a href="https://platform.openai.com/account/api-keys" target="_blank" rel="noopener noreferrer">https://platform.openai.com/account/api-keys</a>'
+                );
+            }
+            throw new Error(errorMessage);
+        }
 
-		// return chatCompletion;
-	} catch (error) {
-		throw error;
-	}
+        // Handle validation errors
+        if (error instanceof Error) {
+            throw error;
+        }
+
+        // Handle unknown errors
+        throw new Error(JSON.stringify({
+            message: 'An unexpected error occurred',
+            type: 'UnknownError'
+        }));
+    }
 };
 
 export const openAiService = {
-	generateWebsite,
+    generateWebsite,
 };
