@@ -3,52 +3,61 @@ import { openAiService } from '../service/completions';
 
 const getCompletions = async (req: Request, res: Response): Promise<void> => {
 	try {
-		// Get user message from request body
-		const { prompt } = req.body;
+		const prompt = req.query.prompt as string;
+		const settingsStr = req.query.settings as string;
 
 		if (!prompt) {
-			res.status(400).json({ error: 'Message is required' });
+			res.status(400).json({ error: 'Prompt is missing!' });
 			return;
 		}
 
-		// Set headers for streaming
-		res.setHeader('Content-Type', 'text/event-stream');
-		res.setHeader('Cache-Control', 'no-cache');
-		res.setHeader('Connection', 'keep-alive');
+		if (!settingsStr) {
+			res.status(400).json({ error: 'AI settings are missing!' });
+			return;
+		}
 
-		// Call the completion service
-		const stream = await openAiService.generateWebsite(prompt) as NodeJS.EventEmitter;
+		let settings;
+		try {
+			settings = JSON.parse(settingsStr);
+		} catch (e) {
+			res.status(400).json({ error: 'Invalid AI settings format!' });
+			return;
+		}
 
-		// Handle stream events
-		stream.on('content', (delta: string) => {
-			res.write(`data: ${JSON.stringify({ content: delta })}\n\n`);
-		});
+// Set SSE headers
+res.setHeader('Content-Type', 'text/event-stream');
+res.setHeader('Cache-Control', 'no-cache');
+res.setHeader('Connection', 'keep-alive');
+res.setHeader('Access-Control-Allow-Origin', '*');
+res.setHeader('Access-Control-Allow-Methods', 'GET');
+res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-		stream.on('end', () => {
-			res.end();
-		});
+// Handle client disconnect
+req.on('close', () => {
+    res.end();
+});
 
-		stream.on('error', (error: Error) => {
-			console.error('Stream error:', error);
-			res.write(`data: ${JSON.stringify({ error: error.message })}\n\n`);
-			res.end();
-		});
+try {
+    await openAiService.generateWebsite(prompt, settings, (data) => {
+        if (data.error) {
+            res.write(`data: ${JSON.stringify({ error: data.error })}\n\n`);
+            return;
+        }
+        res.write(`data: ${JSON.stringify({ content: data })}\n\n`);
+    });
 
-		// // Check if completions were found
-		// if (!completions) res.status(404).json({ message: 'No completions found' });
-
-		// // Check if there was an error
-		// if (completions && completions instanceof Error)
-		// 	res.status(500).json({ message: `Error ${completions.message}` });
-
-		// Send the completion back to the client
-		// res.status(200).json({ completions });
-	} catch (error: unknown) {
-		console.error('Completion error:', error);
-		res.status(500).json({
-			error: error instanceof Error ? error.message : 'Internal server error',
-		});
-	}
+    // Send complete event
+    res.write(`event: complete\ndata: {}\n\n`);
+    res.end();
+} catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+    res.write(`data: ${JSON.stringify({ error: errorMessage })}\n\n`);
+    res.end();
+}
+} catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+    res.status(500).json({ error: errorMessage });
+}
 };
 
 export { getCompletions };
