@@ -1,17 +1,25 @@
 import { useState } from 'react';
-import { ChatSection, AppLayout, PreviewSection } from './features';
-import { ChatHeader, Navigation } from './features/layout/components';
+import { Toaster } from 'react-hot-toast';
+
+import { ChatSection, AppLayout, PreviewSection, SettingsMenu } from './features';
+import { AiConfigProvider, toastOptions } from './shared';
 
 export const App = () => {
-    const [sourceCode, setSourceCode] = useState<string>('');
     const [currentTab, setCurrentTab] = useState<'PREVIEW' | 'CODE'>('PREVIEW');
+    const [sourceCode, setSourceCode] = useState<string>('');
 
     return (
-        <AppLayout
-            headerLeft={<ChatHeader />}
-            headerRight={<Navigation currentTab={currentTab} setCurrentTab={setCurrentTab} />}
-            chat={<ChatSection setSourceCode={setSourceCode} setCurrentTab={setCurrentTab} />}
-            preview={<PreviewSection sourceCode={sourceCode} currentTab={currentTab} />}
-        />
+        <AiConfigProvider>
+            <AppLayout
+                chat={<ChatSection setSourceCode={setSourceCode} setCurrentTab={setCurrentTab} />}
+                preview={<PreviewSection sourceCode={sourceCode} currentTab={currentTab} />}
+                setCurrentTab={setCurrentTab}
+                currentTab={currentTab}
+            />
+
+            <SettingsMenu />
+
+            <Toaster position="top-right" toastOptions={{ ...toastOptions }} />
+        </AiConfigProvider>
     );
 };
